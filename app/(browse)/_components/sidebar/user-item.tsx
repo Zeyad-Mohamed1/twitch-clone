@@ -11,13 +11,15 @@ import { useSidebar } from "@/store/use-sidebar";
 import { UserAvatar } from "@/components/user-avatar";
 import { LiveBadge } from "@/components/live-badge";
 
-interface UserItemProps {
+export function UserItem({
+  username,
+  imageUrl,
+  isLive,
+}: {
   username: string;
   imageUrl: string;
   isLive?: boolean;
-}
-
-export function UserItem({ username, imageUrl, isLive }: UserItemProps) {
+}) {
   const pathname = usePathname();
 
   const { collapsed } = useSidebar((state) => state);

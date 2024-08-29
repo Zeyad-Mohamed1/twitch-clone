@@ -1,22 +1,47 @@
 import { currentUser } from "@clerk/nextjs/server";
+
 import { db } from "@/lib/db";
 
 export const getSelf = async () => {
-  const user = await currentUser();
+  const self = await currentUser();
 
-  if (!user || !user.username) {
+  if (!self || !self.username) {
     throw new Error("Unauthorized");
   }
 
-  const self = await db.user.findUnique({
+  const user = await db.user.findUnique({
     where: {
-      externalUserId: user.id,
+      externalUserId: self.id,
     },
   });
 
-  if (!self) {
-    throw new Error("No user found");
+  if (!user) {
+    throw new Error("Not found");
   }
 
-  return self;
+  return user;
+};
+
+export const getSelfByUsername = async (username: string) => {
+  const self = await currentUser();
+
+  if (!self || !self.username) {
+    throw new Error("Unauthorized");
+  }
+
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (self.username !== username) {
+    throw new Error("Unauthorized");
+  }
+
+  return user;
 };

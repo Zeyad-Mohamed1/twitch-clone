@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 
 import { db } from "@/lib/db";
-// import { resetIngresses } from "@/actions/ingress";
+import { resetIngresses } from "@/actions/ingress";
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
@@ -58,11 +58,11 @@ export async function POST(req: Request) {
         externalUserId: payload.data.id,
         username: payload.data.username,
         imageUrl: payload.data.image_url,
-        // stream: {
-        //   create: {
-        //     name: `${payload.data.username}'s stream`,
-        //   },
-        // },
+        stream: {
+          create: {
+            name: `${payload.data.username}'s stream`,
+          },
+        },
       },
     });
   }
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
   }
 
   if (eventType === "user.deleted") {
-    // await resetIngresses(payload.data.id);
+    await resetIngresses(payload.data.id);
 
     await db.user.delete({
       where: {

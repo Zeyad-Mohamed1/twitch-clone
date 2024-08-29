@@ -7,11 +7,11 @@ import { useSidebar } from "@/store/use-sidebar";
 
 import { UserItem, UserItemSkeleton } from "./user-item";
 
-interface RecommendedProps {
-  data: User[];
-}
-
-export function Recommended({ data }: RecommendedProps) {
+export function Recommended({
+  data,
+}: {
+  data: (User & { stream: { isLive: boolean } | null })[];
+}) {
   const { collapsed } = useSidebar((state) => state);
 
   const showLabel = !collapsed && data.length > 0;
@@ -29,7 +29,7 @@ export function Recommended({ data }: RecommendedProps) {
             key={user.id}
             imageUrl={user.imageUrl}
             username={user.username}
-            isLive={true}
+            isLive={user.stream?.isLive}
           />
         ))}
       </ul>
