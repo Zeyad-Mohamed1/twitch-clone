@@ -1,9 +1,14 @@
-import { Suspense } from "react";
+import React, { Suspense } from "react";
+
 import { Container } from "./_components/container";
 import { Navbar } from "./_components/navbar";
 import { Sidebar, SidebarSkeleton } from "./_components/sidebar";
 
-const BrowseLayout = ({ children }: { children: React.ReactNode }) => {
+export default function BrowseLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <>
       <Navbar />
@@ -15,6 +20,4 @@ const BrowseLayout = ({ children }: { children: React.ReactNode }) => {
       </div>
     </>
   );
-};
-
-export default BrowseLayout;
+}

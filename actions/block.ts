@@ -13,24 +13,31 @@ const roomService = new RoomServiceClient(
 );
 
 export const onBlock = async (id: string) => {
-  const blockedUser = await blockUser(id);
+  const self = await getSelf();
 
-  if (blockedUser) {
-    revalidatePath(`${blockedUser.blocked.username}`);
+  let blockedUser;
+
+  try {
+    blockedUser = await blockUser(id);
+  } catch {
+    // this means user is guest
   }
+
+  try {
+    await roomService.removeParticipant(self.id, id);
+  } catch {
+    // this means user not in the room
+  }
+
+  revalidatePath(`/u/${self.username}/community`);
 
   return blockedUser;
 };
 
 export const onUnblock = async (id: string) => {
-  // const self = await getSelf();
+  const self = await getSelf();
   const unblockedUser = await unblockUser(id);
 
-  revalidatePath("/");
-
-  if (unblockedUser) {
-    revalidatePath(`${unblockedUser.blocked.username}`);
-  }
-
+  revalidatePath(`/u/${self.username}/community`);
   return unblockedUser;
 };

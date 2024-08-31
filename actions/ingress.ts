@@ -13,6 +13,7 @@ import { revalidatePath } from "next/cache";
 
 import { db } from "@/lib/db";
 import { getSelf } from "@/lib/auth-service";
+import { json } from "stream/consumers";
 
 const roomService = new RoomServiceClient(
   process.env.LIVEKIT_API_URL!,
@@ -83,5 +84,6 @@ export const createIngress = async (ingressType: IngressInput) => {
   });
 
   revalidatePath(`/u/${self.username}/keys`);
-  return ingress;
+
+  return JSON.stringify(ingress);
 };
